@@ -1,0 +1,5 @@
+name = Nice logger
+description = Provides a nice wrapper over Drupal's watchdog()
+core = 7.x
+package = Nice logger
+dependencies[] = xautoload
