@@ -32,16 +32,16 @@ class NiceLogger {
 
   private function formatLogEntry($logEntry) {
     $timestamp = $this->formatTimestamp($logEntry);
+    $severity = $this->formatSeverity($logEntry);
+    $tags = $this->formatTags($logEntry);
     $message = $this->formatMessage($logEntry);
-    if ($tags = $this->formatTags($logEntry)) {
-      return "$timestamp $tags $message\n";
-    } else {
-      return "$timestamp $message\n";
-    }
+
+    $formattedMsg = array_filter([$timestamp, $severity, "-- :", $tags, $message, "\n"]);
+    return implode(' ', $formattedMsg);
   }
 
   private function formatTimestamp($logEntry) {
-    return date('c', $logEntry['timestamp']);
+    return '['. date('c', $logEntry['timestamp']) .']';
   }
 
   private function formatMessage($logEntry) {
@@ -57,6 +57,7 @@ class NiceLogger {
     // can remove all tags.
     return strip_tags($message);
   }
+
   private function formatTags($logEntry) {
     if (!$logEntry['type']) {
       return "";
@@ -66,6 +67,37 @@ class NiceLogger {
     return array_reduce($splittedTags, function ($carry, $tag) {
       return $carry . '['. strtoupper($tag) .']';
     });
+  }
 
+  private function formatSeverity($logEntry) {
+    switch ($logEntry['severity']) {
+      case WATCHDOG_EMERGENCY:
+        $severity = "EMERGENCY";
+        break;
+      case WATCHDOG_ALERT:
+        $severity = "ALERT";
+        break;
+      case WATCHDOG_CRITICAL:
+        $severity = "CRITICAL";
+        break;
+      case WATCHDOG_ERROR:
+        $severity = "ERROR";
+        break;
+      case WATCHDOG_WARNING:
+        $severity = "WARNING";
+        break;
+      case WATCHDOG_NOTICE:
+        $severity = "NOTICE";
+        break;
+      case WATCHDOG_INFO:
+        $severity = "INFO";
+        break;
+      case WATCHDOG_DEBUG:
+        $severity = "DEBUG";
+        break;
+    }
+    // We want all log messages to be aligned, so the severities are space-padded
+    // to take the same space.
+    return str_pad($severity, 9, ' ', STR_PAD_LEFT);
   }
 }
