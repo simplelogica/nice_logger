@@ -1,16 +1,24 @@
 # nice_logger
 
-*Nice Logger* allows you to substitute ugly calls to [Drupal watchdog](https://api.drupal.org/api/drupal/includes%21bootstrap.inc/function/watchdog/7) with a much more concise and expressive interface.
+*Nice Logger* improves default Drupal logging by using a logfile instead the database as logging backend and by providing a much more concise and expressive interface over [Drupal watchdog](https://api.drupal.org/api/drupal/includes%21bootstrap.inc/function/watchdog/7).
 
 ## Installing
 
-Currently *Nice Logger* is not on [Drupal.org](https://www.drupal.org/) yet. Until then, the recommended installation procedure is to clone the repo in your `modules` folder and enable the module with `drush`:
+Currently *Nice Logger* is not available on [Drupal.org](https://www.drupal.org/) yet. Until then, the recommended installation procedure is to clone the repo in your `modules/devel` folder and enable the module with `drush`:
 
 ```sh
   drush en -y nice_logger
 ```
 
 ## Features
+
+### Write logs where they belong to
+
+By default Drupal uses de [Dblog module](https://www.drupal.org/documentation/modules/dblog) to store logs in the database. This approach makes the `watchdog` table grow over time and can slow down the database (and thus, the application) in moments of verbose logging.
+
+An alternative provided in Drupal core is the [Syslog module](https://www.drupal.org/documentation/modules/syslog), which uses the Operating System's logging facility. As stated in the documentation this module is not suitable for shared hosting environments and requires a special system configuration.
+
+Nice logger writes the logs into a file which can be stored where you want and inspected using `less`, `tail`, `grep` or any  text editor.
 
 ### Short, nice syntax
 
@@ -28,13 +36,30 @@ Which *Nice Logger* transforms in something like this:
   Log::error("Hi I'm an error message");
 ```
 
+Both produce a line like this in the log file:
+```
+[2016-04-09T01:10:01+02:00]     ERROR -- : Hi I'm an error message
+```
+
 ### Message tagging
 
-Want to add a tag to your message? No problem.
+Nice Logger allows you to tag log messages.  Tags can be specified using an array or space-separated in a string.  The tags are written between brakets (such as Ruby on Rails `ActiveSupport::TaggedLogging`) and converted to uppercase to make them stand out in logs.
+
+For example, the following code
 
 ```php
   <?php
-  Log::error("Hi I'm an error message", "super fancy tag");
+  Log::info("crm", "Requesting USER 24 email");
+  Log::error("api login", "Could not authenticate user in available timeframe");
+  Log::emergency(["api", "crm"], "Crm is DOWN");
+```
+
+will write the following lines in the log file:
+
+```
+[2016-04-09T01:10:23+02:00]      INFO -- : [CRM] Requesting USER 24 email
+[2016-04-09T01:10:40+02:00]     ERROR -- : [API][LOGIN] Could not authenticate user in available timeframe
+[2016-04-09T01:11:03+02:00] EMERGENCY -- : [API][CRM] Crm is DOWN
 ```
 
 ### Expressiveness
@@ -46,22 +71,27 @@ Global constants are almost never a great idea. *Nice Logger* allows you to use 
 - Use `Log::warning()` instead of `WATCHDOG_WARNING`
 - and so on... Every watchdog severity has its corresponding method.
 
-### Namespaces
+### Easy configuration
 
-*Nice logger* is namespaced using the power of [xautoload](https://www.drupal.org/project/xautoload). This avoids name collisions and allows you to alias the `Log` class however you want.
+*Nice Logger* can be easy configured using `settings.php`.
 
-To use the *Nice logger* namespace take a look below:
+To specify the log file, you must add the following line to your `settings.php`.
 
 ```php
-  <?php
-  use Drupal\nice_logger\Log;
-  Log::info("Whoooo, I'm being logged!!")
-
-  // But why write 3 characters when you can write only 1?
-  use Drupal\nice_logger\Log as L;
-  L::info("Whoooo, I'm being logged again!!")
+<?php
+$conf['nice_logger_file'] = 'logs/application.log';
 ```
 
+Unless you specify it otherwise, *Nice Logger* will write logs to `logs/application.log`.
+
+To specify a minimum log level, you must add the following line to your `settings.php`:
+
+```php
+<?php
+$conf['nice_logger_level'] = WATCHDOG_INFO;
+```
+
+Unless you specify it otherwise, *Nice Logger* will use a minimum log level of DEBUG. Log messages with a level below the minimum specified will not be written in the log.
 ## Missing Features
 
 The following two features of Drupal `watchdog` have been kept out of *Nice Logger*:
