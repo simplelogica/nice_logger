@@ -4,4 +4,5 @@ core = 7.x
 php = 5.3
 package = Nice logger
 files[] = src/Log.php
+files[] = src/NiceLogger.php
 version = 7.x-1.0

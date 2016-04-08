@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * Implements hook_watchdog().
+ * Redirects watchdog() calls to a log file. To configure the log file to which
+ * logs will be written add the following configuration in settings.php
+ *
+ *   $conf['nice_logger_file'] = 'YOUR_OUTPUT_FILE'
+ */
+function nice_logger_watchdog($log_entry) {
+  $log_file = variable_get('nice_logger_file', 'logs/application.log');
+  $min_level = variable_get('nice_logger_level', WATCHDOG_DEBUG);
+  $logger = new NiceLogger($log_file, $min_level);
+  $logger->log($log_entry);
+}
