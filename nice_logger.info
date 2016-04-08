@@ -3,5 +3,5 @@ description = Provides a nice wrapper over Drupal's watchdog()
 core = 7.x
 php = 5.3
 package = Nice logger
-dependencies[] = xautoload
+files[] = src/Log.php
 version = 7.x-1.0
