@@ -79,7 +79,7 @@ To specify the log file, you must add the following line to your `settings.php`.
 
 ```php
 <?php
-$conf['nice_logger_file'] = 'logs/application.log';
+$conf['nice_logger_file'] = 'log/application.log';
 ```
 
 Unless you specify it otherwise, *Nice Logger* will write logs to `logs/application.log`.
