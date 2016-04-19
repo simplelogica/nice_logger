@@ -45,13 +45,7 @@ class NiceLogger {
   }
 
   private function formatMessage($logEntry) {
-    // If the log entry contains variables, we must use the t() function to
-    // automatically interpolate and escape them into the message.
-    if ($logEntry['variables']) {
-      $message = t($logEntry['message'], $logEntry['variables']);
-    } else {
-      $message = $logEntry['message'];
-    }
+    $message = format_string($logEntry['message'], $logEntry['variables']);
     // Drupal likes to add HTML tags such as `<em>` or `<b>` into the log messages,
     // since our logging goes to a logfile and will not bee seen in a browser we
     // can remove all tags.
