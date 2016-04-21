@@ -45,7 +45,13 @@ class NiceLogger {
   }
 
   private function formatMessage($logEntry) {
-    $message = format_string($logEntry['message'], $logEntry['variables']);
+    // We protect ourselves from those modules that call `watchdog()` with the variables
+    // set to null or any other thing that is not an array.
+    if (!empty($logEntry['variables']) && is_array($logEntry['variables'])) {
+      $message = format_string($logEntry['message'], $logEntry['variables']);
+    } else {
+      $message = format_string($logEntry['message'], []);
+    }
     // Drupal likes to add HTML tags such as `<em>` or `<b>` into the log messages,
     // since our logging goes to a logfile and will not bee seen in a browser we
     // can remove all tags.
