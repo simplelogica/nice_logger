@@ -43,7 +43,7 @@ Both produce a line like this in the log file:
 
 ### Message tagging
 
-Nice Logger allows you to tag log messages.  Tags can be specified using an array or space-separated in a string.  The tags are written between brakets (such as Ruby on Rails `ActiveSupport::TaggedLogging`) and converted to uppercase to make them stand out in logs.
+Nice Logger allows you to tag log messages.  Tags can be specified using an array or a string.  The tags are written between brakets (such as Ruby on Rails `ActiveSupport::TaggedLogging`) and converted to uppercase to make them stand out in logs.
 
 For example, the following code
 
@@ -51,15 +51,15 @@ For example, the following code
   <?php
   Log::info("crm", "Requesting USER 24 email");
   Log::error("api login", "Could not authenticate user in available timeframe");
-  Log::emergency(["api", "crm"], "Crm is DOWN");
+  Log::emergency(["api login", "crm"], "Crm is DOWN");
 ```
 
 will write the following lines in the log file:
 
 ```
 [2016-04-09T01:10:23+02:00]      INFO -- : [CRM] Requesting USER 24 email
-[2016-04-09T01:10:40+02:00]     ERROR -- : [API][LOGIN] Could not authenticate user in available timeframe
-[2016-04-09T01:11:03+02:00] EMERGENCY -- : [API][CRM] Crm is DOWN
+[2016-04-09T01:10:40+02:00]     ERROR -- : [API LOGIN] Could not authenticate user in available timeframe
+[2016-04-09T01:11:03+02:00] EMERGENCY -- : [API LOGIN][CRM] Crm is DOWN
 ```
 
 ### Expressiveness

@@ -62,9 +62,14 @@ class NiceLogger {
     if (!$logEntry['type']) {
       return "";
     }
-    $splittedTags = explode(' ', $logEntry['type']);
     // We want to follow Rails convention of specifying tags between brackets.
-    return array_reduce($splittedTags, function ($carry, $tag) {
+    // First we make sure to conver the tags to an array
+    if (!is_array($logEntry['type'])) {
+      $tags = [$logEntry['type']];
+    } else {
+      $tags = $logEntry['type'];
+    }
+    return array_reduce($tags, function ($carry, $tag) {
       return $carry . '['. strtoupper($tag) .']';
     });
   }
