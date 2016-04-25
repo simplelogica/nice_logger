@@ -13,3 +13,14 @@ function nice_logger_watchdog($log_entry) {
   $logger = new NiceLogger($log_file, $min_level);
   $logger->log($log_entry);
 }
+
+/**
+ * Implements hook_boot().
+ * Loads Rollbar library and sets default error handlers.
+ */
+function nice_logger_boot() {
+  if (variable_get('nice_logger_rollbar_enabled')) {
+    require_once "sites/all/libraries/rollbar/src/rollbar.php";
+    Rollbar::init(variable_get('nice_logger_rollbar_token'));
+  }
+}
