@@ -1,6 +1,6 @@
 # nice_logger
 
-*Nice Logger* improves default Drupal logging by using a logfile instead the database as logging backend and by providing a much more concise and expressive interface over [Drupal watchdog](https://api.drupal.org/api/drupal/includes%21bootstrap.inc/function/watchdog/7).
+*Nice Logger* improves default Drupal logging by using a logfile instead the database as logging backend and by providing a much more concise and expressive interface over [Drupal watchdog](https://api.drupal.org/api/drupal/includes%21bootstrap.inc/function/watchdog/7). It can also integrate with [Rollbar](https://rollbar.com/) to automatically report warnings and errors.
 
 ## Installing
 
