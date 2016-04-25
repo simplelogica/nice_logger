@@ -92,6 +92,28 @@ $conf['nice_logger_level'] = WATCHDOG_INFO;
 ```
 
 Unless you specify it otherwise, *Nice Logger* will use a minimum log level of DEBUG. Log messages with a level below the minimum specified will not be written in the log.
+
+### Rollbar integration
+
+*Nice Logger* can be easily integrated to automatically send error messages to [Rollbar](https://rollbar.com/).
+
+The first step is to download the [Rollbar PHP library](https://github.com/rollbar/rollbar-php) to the directory `sites/all/libraries/rollbar` of your Drupal project.
+After the library is installed, you only have to add the following line to your `settings.php` and Rollbar will start working magically.
+
+```php
+<?php
+$conf['nice_logger_rollbar_token'] = 'YOUR ACCESS TOKEN'
+```
+
+To stop using Rollbar you only have to delete or comment the previous line in your `settings.php`.
+
+If you want to, you can also configure the environment that will appear in the Rollbar messages (the default is `development`).
+
+```php
+<?php
+$conf['nice_logger_rollbar_environment'] = 'development';
+```
+
 ## Missing Features
 
 The following two features of Drupal `watchdog` have been kept out of *Nice Logger*:
