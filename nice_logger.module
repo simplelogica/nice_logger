@@ -10,7 +10,8 @@
 function nice_logger_watchdog($log_entry) {
   $log_file = variable_get('nice_logger_file', 'log/application.log');
   $min_level = variable_get('nice_logger_level', WATCHDOG_DEBUG);
-  $logger = new NiceLogger($log_file, $min_level);
+  $rollbar_enabled = class_exists('Rollbar');
+  $logger = new NiceLogger($log_file, $min_level, $rollbar_enabled);
   $logger->log($log_entry);
 }
 
@@ -19,8 +20,11 @@ function nice_logger_watchdog($log_entry) {
  * Loads Rollbar library and sets default error handlers.
  */
 function nice_logger_boot() {
-  if (variable_get('nice_logger_rollbar_enabled')) {
+  if ($rollbar_token = variable_get('nice_logger_rollbar_token')) {
     require_once "sites/all/libraries/rollbar/src/rollbar.php";
-    Rollbar::init(variable_get('nice_logger_rollbar_token'));
+    Rollbar::init([
+      'access_token' => $rollbar_token,
+      'environment' => variable_get('nice_logger_rollbar_environment', 'development')
+    ]);
   }
 }
