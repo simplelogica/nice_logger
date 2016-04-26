@@ -16,31 +16,25 @@ class NiceLogger {
   }
 
   function log($logEntry) {
-    if (!$this->shouldLog($logEntry)) {
-      return;
-    }
     $this->write($logEntry);
-    if ($this->rollbarEnabled) {
-      $this->reportRollbar($logEntry);
-    }
+    $this->reportRollbar($logEntry);
   }
 
   private function shouldLog($logEntry) {
     return $logEntry['severity'] <= $this->minLevel;
   }
 
-  private function write($formattedEntry) {
-    $logFile = fopen($this->fileName, 'a');
-    fwrite($logFile, $this->formatLogEntry($logEntry));
-    fclose($logFile);
+  private function write($logEntry) {
+    if ($this->shouldLog($logEntry)) {
+      $logFile = fopen($this->fileName, 'a');
+      fwrite($logFile, $this->formatLogEntry($logEntry));
+      fclose($logFile);
+    }
   }
 
   private function reportRollbar($logEntry) {
-    if ($logEntry['severity'] <= WATCHDOG_WARNING) {
+    if ($this->rollbarEnabled && $logEntry['severity'] <= WATCHDOG_ERROR) {
       switch ($logEntry['severity']) {
-        case WATCHDOG_WARNING:
-          $severity = 'warning';
-          break;
         case WATCHDOG_ERROR:
           $severity = 'error';
           break;
