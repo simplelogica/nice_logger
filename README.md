@@ -2,6 +2,9 @@
 
 *Nice Logger* improves default Drupal logging by using a logfile instead the database as logging backend and by providing a much more concise and expressive interface over [Drupal watchdog](https://api.drupal.org/api/drupal/includes%21bootstrap.inc/function/watchdog/7). It can also integrate with [Rollbar](https://rollbar.com/) to automatically report warnings and errors.
 
+## Requirements
+PHP 5.4+
+
 ## Installing
 
 Currently *Nice Logger* is not available on [Drupal.org](https://www.drupal.org/) yet. Until then, the recommended installation procedure is to clone the repo in your `modules/devel` folder and enable the module with `drush`:
