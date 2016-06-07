@@ -71,10 +71,7 @@ class NiceLogger {
     } else {
       $message = format_string($logEntry['message'], []);
     }
-    // Drupal likes to add HTML tags such as `<em>` or `<b>` into the log messages,
-    // since our logging goes to a logfile and will not bee seen in a browser we
-    // can remove all tags.
-    return html_entity_decode(strip_tags($message));
+    return $message;
   }
 
   private function formatTags($logEntry) {
